@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+ {% block content %}
+ <div class="container mt-5">
+    <div class="">
+    <h3 class="text-center">Show All Trade</h3>
+    <div class="row mt-5 justify-content-around">
+        <div class='col-12'>
+            <table class="table table-hover text-center">
+                <thead>
+                    <tr>
+                        <th scope="col">Index</th>
+                        <th scope="col">Client_id</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Symbol</th>
+                        <th scope="col">QTY</th>
+                        <th scope="col">Rate</th>
+                        <th scope="col">NetRate</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for clnt in clnt_data %}
+                    <tr>
+                        <th scope="row">{{forloop.counter}}</th>
+                        <td>{{clnt.client_id}}</td>
+                        <td>{{clnt.name}}</td>
+                        <td>{{clnt.symbol}}</td>
+                        <td>{{clnt.qty}}</td>
+                        <td>{{clnt.rate}}</td>
+                        <td>{{clnt.netrate}}</td>
+                        <td>{{clnt.amount}}</td>
+                        <td class="status-cell"><div style="{% if clnt.status == 'buy' %}background-color: green;{% elif clnt.status == 'sell' %}background-color: red;{% endif %}"  class="shadow-sm p-1">{{clnt.status}}</div></td>
+                        {% comment %} <td>
+                            <a href="{% url 'edit' clnt.client_id %}" class="btn btn-success btn-sm">Edit</a>
+                            <form action="{% url 'delete' clnt.client_id %}" method="POST" class="d-inline">
+                                {% csrf_token %}
+                                <input type="submit" value="Delete" class="btn btn-danger btn-sm">
+                            </form>
+                        </td> {% endcomment %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+ </div>
+
+ <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="--bs-modal-width: 600px;--bs-modal-margin: 100px;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" id="color_header">
+            <form method="post" style="--bs-modal-header-padding-x: 44rem;">
+                {% csrf_token %}
+                <div class="form-check form-check-inline">
+                    <label>
+                    <input class="form-check-input" type="radio" name="status" id="inlineRadio1" value="sell"> sell
+                    </label>
+                    <label class="ms-5">
+                    <input class="form-check-input" type="radio" name="status" id="inlineRadio2" value="buy"> Buy
+                    </label>
+                </div>
+                <button type="button" class="btn-close ms-5" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+            <div class="modal-body" id="targetElement">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            {% comment %} <label for="exampleInputNumber">Client ID</label>
+                            <select name="client_id" id="client_id" class="form-control">
+                                {% for client in client_list %}
+                                <option value="{{ client.client_id }}">{{ client.client_id }}</option>
+                                {% endfor %}
+                            </select> {% endcomment %}
+                            <label for="exampleInputNumber">Client ID</label>
+                            <input type="number" id="client_id" name="client_id" class="form-control" id="exampleInputNumber" placeholder="Enter Id">
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="exampleInputName">Client Name</label>
+                            <input type="taxt" class="form-control" name="name" id="clientName" placeholder="Client Name" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div id="symbol_div" class="form-group col-6">
+                        <label for="inputState">Exchange</label>
+                        <select id="symbol_type" name='exchange' class="form-control">
+                            <option id="mcx_option" value="nse" selected>NSE</option>
+                          <option id="nse_option" value="mcx">MCX</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-6">
+                        <div id="nse_symbol_div">
+                            <label for="inputState1">Symbol</label>
+                            <select id="nse_symbol" name='nse_symbol' class="form-control">
+                                <option selected>option</option>
+                                {% comment %} <option>GOLDGUINEA</option>
+                                <option>GOLDM</option>
+                                <option>GOLDPETAL</option>
+                                <option>KAPAS</option> {% endcomment %}
+                            </select>
+                        </div>
+                        <div id="mcx_symbol_div" style="display: none;">
+                            <label for="inputState">Symbol</label>
+                            <select id="mcx_symbol" name='mcx_symbol' class="form-control">
+                            <option selected>ALUMINI</option>
+                            <option>ALUMINIUM</option>
+                            <option>COPPER</option>
+                            <option>COTTONCNDY</option>
+                            <option>CRUDEOIL</option>
+                            <option>CRUDEOILM</option>
+                            <option>GOLD</option>
+                            <option>GOLDGUINEA</option>
+                            <option>GOLDM</option>
+                            <option>GOLDPETAL</option>
+                            <option>KAPAS</option>
+                            <option>LEAD</option>
+                            <option>LEADMINI</option>
+                            <option>MCXBULLDEX</option>
+                            <option>MCXENRGDEX</option>
+                            <option>MCXMETLDEX</option>
+                            <option>MENTHAOIL</option>
+                            <option>NATGASMINI</option>
+                            <option>NATURALGAS</option>
+                            <option>NICKEL</option>
+                            <option>SILVER</option>
+                            <option>SILVERM</option>
+                            <option>SILVERMIC</option>
+                            <option>ZINC</option>
+                            <option>ZINCMINI</option>   
+                        </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-6">
+                        <div class="form-group" id="nse_qty">
+                            <label for="exampleqty1">Quantity</label>
+                            <input type="number" id="qty_size" name='qty_size' class="form-control" placeholder="Enter qty">    
+                        </div> 
+                        <div class="form-group" id="mcx_qty"  style="display: none;">
+                            <label for="exampleqty1">Lot</label>
+                            <input type="number" id="lot_size" name='lot_size' class="form-control" placeholder="Enter lot">
+                        </div>
+                    </div>
+                    <div class="form-group col-6">
+                        <label for="exampleInputName">rate</label>
+                        <input type="taxt" name="rate" class="form-control" id="exampleInputName" placeholder="Enter Amount">
+                    </div>
+                </div>
+                <div class="row text-center mt-4">
+                    <div class="col-12 d-flex justify-content-center">
+                        <button type="submit" id="btn_color" class="btn btn-success">Submit</button>
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function($) {
+        $("#symbol_type").change(function() {
+            var selectedValue = $(this).val();
+
+            // Hide both symbol dropdowns initially
+            $("#mcx_symbol_div, #nse_symbol_div").hide();
+            $("#mcx_qty, #nse_qty").hide();
+
+            // Show the selected symbol dropdown
+            $("#" + selectedValue + "_symbol_div").show();
+            $("#" + selectedValue + "_qty").show();
+        });
+        $(document).on("keypress", function(event) {
+            // Check if the pressed key is the "+" key (key code 43)
+            if (event.which === 43 || event.keyCode === 43) {
+                // Set the "Buy" radio button to be checked
+                $("#inlineRadio2").prop("checked", true);
+                $("#color_header,#btn_color").css('background-color', 'green');
+
+                // Show the modal
+                $("#exampleModal").modal("show");
+                console.log("The '+' key was pressed.");
+            }
+            // Check if the pressed key is the "-" key (key code 45)
+            else if (event.which === 45 || event.keyCode === 45) {
+                // Set the "Sell" radio button to be checked
+                $("#inlineRadio1").prop("checked", true);
+                $("#color_header,#btn_color").css('background-color', 'red');
+
+                // Show the modal
+                $("#exampleModal").modal("show");
+            }
+        });
+
+    });
+
+    var clientData = {
+        {% for client in client_list %}
+        "{{ client.client_id }}": "{{ client.name }}",
+        {% endfor %}
+    };
+
+    console.log(clientData);
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const clientIdSelect = document.getElementById("client_id");
+        const clientNameInput = document.getElementById("clientName");
+        console.log(clientIdSelect)
+        clientIdSelect.addEventListener("change", function () {
+            const selectedClientId = clientIdSelect.value.toString();
+            const selectedClientName = clientData[selectedClientId] || "";
+            clientNameInput.value = selectedClientName;
+            console.log("Selected Client ID:", selectedClientId); // Debug statement
+            console.log("Selected Client Name:", selectedClientName); // Debug statement
+        });
+    });
+</script>
+ {% endblock content %}

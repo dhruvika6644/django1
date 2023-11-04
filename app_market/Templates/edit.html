@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="row justify-content-around mt-5">
+    <div class="col-md-4">
+        <h4 class="text-center"> Edit Client {{id}}</h4>
+        <form class="mt-5" action="" method="POST">
+            {% csrf_token %}
+            {{form.as_p}}
+            <input type="submit" value="Update" class="btn btn-primary">
+        </form>  
+    </div>
+</div>
+{% endblock content %}
